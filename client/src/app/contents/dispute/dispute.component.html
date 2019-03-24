@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Report Dispute</h2>
+<mat-dialog-content>
+    <mat-card *ngIf='loaded' [formGroup]='disputeForm'>
+        <!-- body of dispute -->
+        <mat-form-field class="full-width">
+            <textarea matInput formControlName='body' placeholder="Details..."></textarea>
+        </mat-form-field>
+
+        <div fxFlex fxLayout="row">
+            <!-- DISPATCHER selection -->
+            <mat-form-field [fxFlex]="33.33">
+                <mat-icon matPrefix>headset_mic</mat-icon>
+                <input type="text" placeholder="Dispatcher" aria-label="Dispatcher" matInput formControlName="dispatcher" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let dispatcher of dispatcherFilteredOptions | async" [value]="dispatcher">
+                        {{dispatcher.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <!-- CUSTOMER selection -->
+            <mat-form-field [fxFlex]='33.33'>
+                <mat-icon matPrefix>person</mat-icon>
+                <input type="text" placeholder="Customer" aria-label="Customer" matInput formControlName="customer" [matAutocomplete]="auto2">
+                <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let customer of customerFilteredOptions | async" [value]="customer">
+                        {{customer.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <!-- DRIVER selection -->
+            <mat-form-field [fxFlex]='33.33'>
+                <mat-icon matPrefix>directions_car</mat-icon>
+                <input type="text" placeholder="Driver" aria-label="Driver" matInput formControlName="driver" [matAutocomplete]="auto3">
+                <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let driver of driverFilteredOptions | async" [value]="driver">
+                        {{driver.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <!-- fault by -->
+        <mat-radio-group fxFlex fxLayout="row" aria-label="Fault By" formControlName="fault_by">
+            <label for="fault_by">Fault By </label>
+            <mat-radio-button [disabled]="!selectedDriver || !selectedCustomer" [value]="selectedCustomer">Customer</mat-radio-button>
+            <mat-radio-button [disabled]="!selectedDriver || !selectedCustomer" [value]="selectedDriver">Driver</mat-radio-button>
+        </mat-radio-group>
+    </mat-card>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <mat-spinner diameter="25" *ngIf="loading"></mat-spinner>
+    <button mat-button color='primary' *ngIf="!loading" [disabled]='!disputeForm.valid' (click)="onSubmit()">
+        <mat-icon>check</mat-icon>Submit</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

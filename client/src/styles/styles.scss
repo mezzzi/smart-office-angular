@@ -1,0 +1,17 @@
+@import 'material';
+@import 'icon';
+@import 'utils';
+@import 'responsive';
+@import 'main';
+@import 'alert';
+@import '~css-star-rating/scss/star-rating';
+//// this is your created themes.scss file, make sure the path to the file is correct
+//@import 'themes';
+//
+//// framework component styles which will use your new theme
+//@import '~@nebular/theme/styles/globals';
+//
+//// install the framework
+//@include nb-install() {
+//    @include nb-theme-global();
+//};

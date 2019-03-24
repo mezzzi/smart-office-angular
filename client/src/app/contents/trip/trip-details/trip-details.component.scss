@@ -1,0 +1,27 @@
+.trip-deetail-card {
+  max-width: 400px;
+}
+
+.trip-detail-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+table {
+  width: 100%;
+}
+.full-width {
+  width: 100%;
+}
+.progress-spinner--small {
+  // height: 30px !important;
+  // width: 30px !important;
+}
+.trip-detail-dialog {
+  width: 100%;
+}
+mat-chip-list {
+  display: inline-block;
+}
+.mat-card .mat-divider {
+  position: relative;
+}

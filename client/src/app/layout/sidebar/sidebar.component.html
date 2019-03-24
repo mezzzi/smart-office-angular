@@ -1,0 +1,149 @@
+<div *ngIf="showSidebar" id="sidebar">
+    <div *ngIf="!isSupervisorManaging">
+        <mat-nav-list *ngIf="!isFinanceManaging">
+            <a mat-list-item [routerLinkActive]="'active'" [routerLink]="['/blank-page']">
+                <mat-icon class="sidenav-icon">history</mat-icon>
+                {{' History'| translate}}
+            </a>
+        </mat-nav-list>
+        <mat-nav-list>
+            <a mat-list-item [routerLinkActive]="'active'" [routerLink]="add_route">
+                <mat-icon class="sidenav-icon" *ngIf="!isFinanceManaging">note_add</mat-icon>
+                <mat-icon class="sidenav-icon" *ngIf="isFinanceManaging">search</mat-icon>
+                {{ isFinanceManaging ? 'Search Trips' : ('Add '+ managedUserLabel) | translate}}
+            </a>
+        </mat-nav-list>
+        <mat-nav-list>
+            <a mat-list-item [routerLinkActive]="'active'" [routerLink]="searchRoute">
+                <mat-icon class="sidenav-icon">search</mat-icon>
+                {{ isFinanceManaging ? 'Search Drivers' : 'Search ' + managedUserLabel | translate}}
+            </a>
+        </mat-nav-list>
+    </div>
+    <div *ngIf="isSupervisorManaging">
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [ngClass]="{'collapsable': expanded[0]}" (click)="toggleExpanded(0)">
+                    <mat-panel-title>
+                        Manage Driver
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a mat-list-item [routerLinkActive]="'active'" [routerLink]="['/add-driver']">
+                        <mat-icon class="sidenav-icon">note_add</mat-icon> {{'Add Driver' | translate}}
+                    </a>
+                </mat-nav-list>
+                <mat-nav-list>
+                    <a mat-list-item [routerLinkActive]="'active'" [routerLink]="['/search-driver']">
+                        <mat-icon class="sidenav-icon">search</mat-icon> {{ 'Search Driver' | translate}}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [ngClass]="{'collapsable': expanded[1]}" (click)="toggleExpanded(1)">
+                    <mat-panel-title>
+                        Manage Dispatcher
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a mat-list-item [routerLinkActive]="'active'" [routerLink]="['/add-dispatcher']">
+                        <mat-icon class="sidenav-icon">note_add</mat-icon> {{'Add Dispatcher'| translate}}
+                    </a>
+                </mat-nav-list>
+                <mat-nav-list>
+                    <a mat-list-item [routerLinkActive]="'active'" [routerLink]="['/search-dispatcher']">
+                        <mat-icon class="sidenav-icon">search</mat-icon> {{ 'Search Dispatcher' | translate}}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [ngClass]="{'collapsable': expanded[2]}" (click)="toggleExpanded(2)">
+                    <mat-panel-title>
+                        Manage Corporate
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a mat-list-item [routerLinkActive]="'active'" [routerLink]="['/add-corporate']">
+                        <mat-icon class="sidenav-icon">note_add</mat-icon> {{'Add Corporate' | translate}}
+                    </a>
+                </mat-nav-list>
+                <mat-nav-list>
+                    <a mat-list-item [routerLinkActive]="'active'" [routerLink]="['/search-corporate']">
+                        <mat-icon class="sidenav-icon">search</mat-icon> {{ 'Search Corporate' | translate}}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [ngClass]="{'collapsable': expanded[2]}" (click)="toggleExpanded(2)">
+                    <mat-panel-title>
+                        Manage Customer
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/add-customer']">
+                        <mat-icon class="sidenav-icon">note_add</mat-icon> {{'Add Customer' | translate}}
+                    </a>
+                </mat-nav-list>
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/search-customer']">
+                        <mat-icon class="sidenav-icon">search</mat-icon> {{ 'Search Customer' | translate}}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [ngClass]="{'collapsable': expanded[3]}" (click)="toggleExpanded(3)">
+                    <mat-panel-title>
+                        Manage Finance
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/add-finance']">
+                        <mat-icon class="sidenav-icon">note_add</mat-icon> {{'Add Finance' | translate}}
+                    </a>
+                </mat-nav-list>
+
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/search-finance']">
+                        <mat-icon class="sidenav-icon">search</mat-icon> {{ 'Search Finance' | translate}}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [ngClass]="{'collapsable': expanded[3]}" (click)="toggleExpanded(3)">
+                    <mat-panel-title>
+                        Manage Data Analyst
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/add-data-analyst']">
+                        <mat-icon class="sidenav-icon">note_add</mat-icon> {{'Add Data Analyst' | translate}}
+                    </a>
+                </mat-nav-list>
+
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/search-data-analyst']">
+                        <mat-icon class="sidenav-icon">search</mat-icon> {{ 'Search Data Analyst' | translate}}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header [ngClass]="{'collapsable': expanded[3]}" (click)="toggleExpanded(3)">
+                    <mat-panel-title>
+                        Manage Dispatcher Supervisor
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/add-dispatcher-supervisor']">
+                        <mat-icon class="sidenav-icon">note_add</mat-icon> {{'Add Dispatcher Supervisor' | translate}}
+                    </a>
+                </mat-nav-list>
+
+                <mat-nav-list>
+                    <a style="font-size: 14px;" mat-list-item [routerLinkActive]="'active'" [routerLink]="['/search-dispatcher-supervisor']">
+                        <mat-icon class="sidenav-icon">search</mat-icon> {{ 'Search Dispatcher Supervisor' | translate}}
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

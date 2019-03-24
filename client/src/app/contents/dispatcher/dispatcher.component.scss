@@ -1,0 +1,71 @@
+.my-drop-zone { border: dotted 3px lightgray; }
+.nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+.another-file-over-class { border: dotted 3px green; }
+.addmany { margin-top: 10px; }
+.my-drop-zone {
+    border: dotted 3px lightgray;
+}
+
+.nv-file-over {
+    border: dotted 3px red;
+}
+
+.drop-zone {
+    padding-top: 25px !important;
+    width: 100% !important;
+}
+/* Default class applied to drop zones on over */
+
+.another-file-over-class {
+    border: dotted 3px green;
+}
+
+.addmany {
+    margin-top: 20px;
+}
+
+.file-input {
+    display: none;
+}
+
+.mat-list-text {
+    width: auto !important;
+    padding: 10px !important;
+}
+
+.addmany .choose-file-label {
+    border: dashed #757575 1px;
+    padding: 4px;
+    padding-bottom: 14px;
+    background-color: #E0E0E0;
+    cursor: pointer;
+}
+
+div#select-file {
+    margin-top: -10px;
+    margin-left: -20px;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+p {
+    margin-top: 0;
+    padding: 0 10px;
+    width: 90%;
+    margin-bottom: 1rem;
+}
+
+canvas {
+    width: auto !important;
+    height: 100% !important;
+    margin-top: 20px !important;
+    margin-left: -200px !important;
+    box-sizing: border-box !important;
+}

@@ -1,0 +1,50 @@
+<h2 mat-dialog-title> Search Trips </h2>
+<mat-dialog-content class="search-dialog">
+    <div class="mat-elevation-z8">
+        <mat-card>
+            <mat-form-field class="full-width">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+            </mat-form-field>
+        </mat-card>
+        <mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+        <table mat-table [dataSource]="dataSource" matSort>
+            <!-- Name Column -->
+            <ng-container matColumnDef="driver_name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Driver Name</th>
+                <td mat-cell *matCellDef="let trip"> {{trip.driver? trip.driver.name: ''}} </td>
+            </ng-container>
+            <!-- Email Column -->
+            <ng-container matColumnDef="customer_name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </th>
+                <td mat-cell *matCellDef="let trip"> {{trip.customer.name}} </td>
+            </ng-container>
+            <!-- Email Column -->
+            <ng-container matColumnDef="trip_status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Trip Status </th>
+                <td mat-cell *matCellDef="let trip" [style.color]="COLORS[trip.trip_status]">
+                    {{trip.trip_status}} </td>
+            </ng-container>
+            <ng-container matColumnDef="starting_location">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Destination </th>
+                <td mat-cell *matCellDef="let trip"> {{trip.starting_location.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="destination_location">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Destination </th>
+                <td mat-cell *matCellDef="let trip"> {{trip.destination_location.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="call_time">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Call Time </th>
+                <td mat-cell *matCellDef="let trip"> {{trip.call_time | date}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="data" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="launchEditFilteredTripDialog(row)"></tr>
+        </table>
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+
+    <button class="mat-raised-button" (click)="closeSearchDialog()">Close</button>
+
+</mat-dialog-actions>

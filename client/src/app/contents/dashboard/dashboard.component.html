@@ -1,0 +1,17 @@
+<mat-card>
+    <mat-card>
+        <mat-card-header>
+            <span (click)='setRegularData(months)'>{{year}}</span>: {{month}} Report
+        </mat-card-header>
+        <mat-card-content>
+                <chart type="bar" [data]="barChartDataSets" [options]="options" (clickElement)="showMonthlyData($event)"></chart>
+        </mat-card-content>
+    </mat-card>
+    <mat-card>
+        <mat-card-title>Daily Report</mat-card-title>
+        <!-- <mat-card-content> -->
+            <ngx-charts-advanced-pie-chart [scheme]="colorScheme" [results]="dailyData">
+            </ngx-charts-advanced-pie-chart>
+        <!-- </mat-card-content> -->
+    </mat-card>
+</mat-card>

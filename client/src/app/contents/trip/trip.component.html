@@ -1,0 +1,94 @@
+<div id="tripSidebar">
+
+    <div fxFlexFill fxLayout="column">
+
+        <div [fxFlex]="33.33" fxFlexFill fxLayout="column" fxLayoutAlign="end spacearound" class="scroll sidebar-section sidebar-section--pending">
+            <div class="sidebar-label">Pending Trips</div>
+            <div class="scroll">
+                <mat-nav-list *ngFor="let trip of pendingTrips">
+                    <!-- TODO: change trip.starting_location to trip.starting_location.name and
+                                trip.destination_location to trip.destination_location.name
+                     -->
+                    <a [ngClass]='{"late": trip.bg === "#E57373", "close": trip.bg === "#EF9A9A"}' [style.backgroundColor]='trip.bg? trip.bg : "#FFFFFF"'
+                        mat-list-item *ngIf="trip.customer" [ngClass]="{'active': trip._id === activeTripId}" (click)="displayTrip('pending', trip._id)"
+                        matTooltip="NAME: {{ trip.customer.name }} ---
+                    LOCATION: START: {{ trip.starting_location.name }}
+                    DEST: {{ trip.destination_location.name }}" matTooltipClass="trip-sidebar-tooltip" matTooltipPosition="right"
+                        [style.color]="COLORS['pending']">
+                        <mat-icon class="sidenav-icon">person</mat-icon>
+                        {{trip.customer.name || 'Untitled'}}
+                    </a>
+                </mat-nav-list>
+            </div>
+        </div>
+
+        <div [fxFlex]="33.33" fxLayout="column" fxLayoutAlign="end spacearound" class="sidebar-section sidebar-section--accepted">
+            <div class="sidebar-label">Active Trips</div>
+            <div class="scroll">
+                <mat-nav-list *ngFor="let trip of acceptedTrips">
+                    <a matTooltip="NAME: {{ trip.customer.name }} ---
+                    LOCATION: START: {{ trip.starting_location.name }} - DEST: {{ trip.destination_location.name }} ---
+                    DRIVER: NAME: {{ trip.driver.name }} ---
+                    DISPATCHER: {{ trip.received_by.name }}" matTooltipClass="trip-sidebar-tooltip" matTooltipPosition="right"
+                        *ngIf="trip.customer" mat-list-item [ngClass]="{'active': trip._id === activeTripId}" (click)="displayTrip('accepted', trip._id)"
+                        [style.color]="COLORS['accepted']">
+                        <mat-icon class="sidenav-icon">directions_car</mat-icon>
+                        {{trip.customer.name || 'Untitled'}}
+                    </a>
+                </mat-nav-list>
+                <mat-nav-list *ngFor="let trip of startedTrips">
+                    <a matTooltip="NAME: {{ trip.customer.name }} ---
+                    LOCATION: START: {{ trip.starting_location.name }} - DEST: {{ trip.destination_location.name }} ---
+                    DRIVER: NAME: {{ trip.driver.name }} ---
+                    DISPATCHER: {{ trip.received_by.name }}" matTooltipClass="trip-sidebar-tooltip" matTooltipPosition="right"
+                        *ngIf="trip.customer" mat-list-item [ngClass]="{'active': trip._id === activeTripId}" (click)="displayTrip('started', trip._id)"
+                        [style.color]="COLORS['started']">
+                        <mat-icon class="sidenav-icon">directions_car</mat-icon>
+                        {{trip.customer.name || 'Untitled'}}
+                    </a>
+                </mat-nav-list>
+                <mat-nav-list *ngFor="let trip of arrivedTrips">
+                    <a matTooltip="NAME: {{ trip.customer.name }} ---
+                    LOCATION: START: {{ trip.starting_location.name }} - DEST: {{ trip.destination_location.name }} ---
+                    DRIVER: NAME: {{ trip.driver.name }} ---
+                    DISPATCHER: {{ trip.received_by.name }}" matTooltipClass="trip-sidebar-tooltip" matTooltipPosition="right"
+                        *ngIf="trip.customer" mat-list-item [ngClass]="{'active': trip._id === activeTripId}" (click)="displayTrip('arrived', trip._id)"
+                        [style.color]="COLORS['arrived']">
+                        <mat-icon class="sidenav-icon">directions_car</mat-icon>
+                        {{trip.customer.name || 'Untitled'}}
+                    </a>
+                </mat-nav-list>
+            </div>
+        </div>
+
+        <div [fxFlex]="33.33" fxLayout="column" fxLayoutAlign="end spacearound" class="scroll sidebar-section sidebar-section--completed">
+            <div class="sidebar-label">Completed Trips</div>
+            <div class="scroll">
+                <mat-nav-list *ngFor="let trip of completedTrips">
+                    <a *ngIf="trip.customer" [ngClass]="{'active': trip._id === activeTripId}" mat-list-item matTooltip="NAME: {{ trip.customer.name }} --- LOCATION: START: {{ trip.starting_location.name }} -
+                    DEST: {{ trip.destination_location.name }} --- DRIVER: NAME: {{ trip.driver.name }}" matTooltipClass="trip-sidebar-tooltip"
+                        (click)="displayTrip('completed', trip._id)" matTooltipPosition="right" [style.color]="COLORS['completed']">
+                        <mat-icon class="sidenav-icon">location_on</mat-icon>
+                        {{trip.customer.name}}
+                    </a>
+                </mat-nav-list>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+    </div>
+</div>
+
+<div class="trip-body">
+    <button *ngIf="!isShowingProfile" id="search-history" mat-button (click)="showSearchDialog()">
+        <mat-icon>search</mat-icon>
+        Search Trips
+    </button>
+    <router-outlet></router-outlet>
+    <!--<app-map *ngIf="!isShowingProfile"></app-map>-->
+    <app-dispatcher *ngIf="isShowingProfile"></app-dispatcher>
+</div>
+
+<button class="fab-add" matTooltip="Add New Trip" matTooltipPosition="left" matTooltipClass="trip-sidebar-tooltip" *ngIf="showAddTripButton"
+    (click)="addNewTrip()" mat-fab color="accent">
+    <mat-icon>add</mat-icon>
+</button>

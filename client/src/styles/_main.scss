@@ -1,0 +1,125 @@
+$bodyBg: #e0e0e0;
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto';
+    background-color: $bodyBg !important;
+}
+
+//.main-container {
+//    position: absolute;
+//    top: 0px;
+//    left: 0px;
+//    padding: 5px;
+//}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+// style for bloated or stretched button
+
+.pimped-btn {
+    position: relative !important;
+    padding: 5px 30px !important;
+    border-radius: .2rem !important;
+    transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1) !important;
+    will-change: box-shadow, transform !important;
+    text-transform: uppercase !important;
+}
+
+button:focus {
+    outline: none !important;
+}
+
+// style for profile card
+.profile-form.mat-card {
+    margin-top: 10px;
+}
+
+.mat-card .mat-card-actions {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 8px 0;
+}
+
+.card-profile .mat-card-avatar {
+    margin: -60px auto 0;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 0;
+    box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    max-width: 200px;
+    max-height: 200px;
+    height: 180px;
+    width: 180px;
+    margin-bottom: 15px;
+}
+
+.card-profile .mat-card-header {
+    display: flex;
+    flex-direction: column !important;
+}
+
+.card-profile {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.card-profile .card-avatar img {
+    width: 100%;
+    height: auto;
+}
+
+// styles related to file upload
+.drop-zone {
+    width: 300px;
+    border: 1px dashed;
+    text-align: center;
+    height: 100px;
+    padding-top: 30px;
+    box-sizing: border-box;
+    border-radius: 50px;
+    cursor: crosshair;
+}
+
+#file-input {
+    margin: 10px;
+    margin-left: 60px;
+}
+
+span.help-block {
+    color: rgba(255, 0, 0, 0.803)
+}
+
+.fab-add {
+    position: fixed !important;
+    top: 90%;
+    left: 94%;
+}
+
+.trip-sidebar-tooltip {
+    background-color: #424242;
+    font-size: 12px;
+}
+
+.nb-theme-default nb-layout .layout nb-layout-header nav {
+    height: auto !important;
+}
+
+.nb-theme-default nb-layout .layout .layout-container .content .columns nb-layout-column {
+    padding: 10px !important;
+    position: absolute;
+    top: 60px;
+}
+
+.nb-theme-default nb-layout .layout nb-layout-header.fixed ~ .layout-container {
+    padding-top: 0px;
+    min-height: 100vh;
+}
+
+.nb-theme-default nb-sidebar .scrollable {
+    padding: 0 !important;
+}

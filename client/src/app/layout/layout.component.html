@@ -1,0 +1,22 @@
+<nb-layout>
+    <nb-layout-header class="nb-layout-header">
+        <app-top-nav></app-top-nav>
+    </nb-layout-header>
+    <nb-sidebar [state]="sideBarState" tag="left" left>
+        <app-sidebar *ngIf="isShowingSideBar"></app-sidebar>
+    </nb-sidebar>
+    <nb-layout-column class="main-container">
+        <router-outlet></router-outlet>
+        <button class="fab-add"
+                matTooltip="Add {{toBeAdded}}"
+                matTooltipPosition="left"
+                matTooltipClass="trip-sidebar-tooltip"
+                *ngIf="!isShowingAddForm"
+                (click)="showAddForm()"
+                mat-fab color="accent">
+            <mat-icon>add</mat-icon>
+        </button>
+    </nb-layout-column>
+
+</nb-layout>
+

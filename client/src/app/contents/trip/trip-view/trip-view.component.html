@@ -1,0 +1,68 @@
+<!--suppress ALL -->
+<mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+<mat-card *ngIf="loaded">
+    <mat-card-header>
+        <mat-card-title>
+            <h2>{{ !!driver ? driver.name : '' }}</h2>
+            <h3 class="m-0">Search {{'Trips'}}</h3>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <div fxFlex fxLayout="row" fxLayout.lt-md="column" class="collect-edit" fxLayoutGap="20px">
+        <!-- filter: start day -->
+        <mat-form-field>
+            <input matInput [max]="maxDate" [formControl]='startDate' [matDatepicker]="startDatePicker" placeholder="From Date:">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+        <!-- filter: end day -->
+        <mat-form-field>
+            <input matInput [max]="maxDate" [formControl]='endDate' [matDatepicker]="endDatePicker" placeholder="To Date:">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+        </mat-form-field>
+
+        <div [hidden]="!showCollectOption()">
+            <button class="pimped-btn" (click)="doCollect()" mat-raised-button color="primary">Collect
+            </button>
+        </div>
+        <!--<div [hidden]="!showEditOption()">-->
+        <!--<button class="pimped-btn" (click)="editTrip()" mat-raised-button color="accent">Edit Trip-->
+        <!--</button>-->
+        <!--</div>-->
+    </div>
+    <mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource">
+            <ng-container *ngFor="let displayedCol of displayedColumns; let i = index" [matColumnDef]="displayedCol">
+                <th [style.display]="!driver && i === 0 ? 'none' : 'auto'"  mat-header-cell *matHeaderCellDef [ngClass]="{'select':i === 0}">
+
+                    <mat-select class="select-header" *ngIf="i !== 0" [placeholder]="getPlaceHolder(i)" (selectionChange)="colChanged($event, i)">
+                        <mat-option *ngFor="let col of columnNames" [value]="col.value">
+                            {{col.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-checkbox [disabled]="!loaded" *ngIf="i == 0" (click)="$event.stopPropagation()" (change)="$event ? masterToggle() : null;updateTotal();"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td [style.display]="!driver && i === 0 ? 'none' : 'auto'"  [ngClass]="{'select': i == 0}" mat-cell *matCellDef="let row" [style.color]="getColor(row, i)">
+                    <span *ngIf="i !== 0">{{getColValue(row, i)}}</span>
+                    <mat-checkbox *ngIf="i === 0" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null; updateTotal()"
+                        [checked]="selection.isSelected(row)" [disabled]="row.collected || row.trip_status !== 'arrived'">
+                    </mat-checkbox>
+                </td>
+                <td [ngClass]="{'select':i == 0}" mat-footer-cell [style.color]="'magenta'" *matFooterCellDef>
+                    <span [style.color]="'black'">{{ getFooterLabel(i) }}</span> {{ getFooterPrice(i) | currency:' ':true }} {{getETB(i)}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr class="data" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="launchEditDialog(row)"></tr>
+            <tr style="background-color: gold;" [style.display]="!!driver ? 'auto' : 'none'" mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+        </table>
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+</mat-card>

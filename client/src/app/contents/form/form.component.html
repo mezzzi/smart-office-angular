@@ -1,0 +1,224 @@
+<mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+<div class="mb-20" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+    <div [fxFlex]="70">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="profile-form">
+            <mat-card fxLayout="column">
+                <mat-card-header>
+                    <mat-card-title>
+                        <h3 class="m-0">{{isShowingAddForm ? 'Add' : 'Edit'}} {{managedUserLabel}}</h3>
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        <p>Fill in the details, and click the {{ isShowingAddForm ? 'add' : 'update' }} button</p>
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+                    <div [fxFlex]="45" *ngIf="isCorporate">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="corporateName" placeholder="Corporate Name" type="text">
+                        </mat-form-field>
+                    </div>
+                    <div [fxFlex]="45" *ngIf="!isCorporate">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="firstName" placeholder="First Name" type="text">
+                            <span class='help-block' *ngIf="showEnterMessage('firstName')">
+                                Please enter first name
+                            </span>
+                        </mat-form-field>
+                    </div>
+                    <div [fxFlex]="45" *ngIf="!isCorporate">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="lastName" placeholder="Last Name" type="text">
+                            <span class='help-block' *ngIf="showNotValidMessage('lastName')">
+                                Please enter last name
+                            </span>
+                        </mat-form-field>
+                    </div>
+                    <div [fxFlex]="45">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="email" placeholder="Email" type="email">
+                            <span class='help-block' *ngIf="showEnterMessage('email')">
+                                Please enter an email
+                            </span>
+                            <span class='help-block' *ngIf="showNotValidMessage('email')">
+                                Please enter a valid email
+                            </span>
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45" *ngIf="isPasswordRequired">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="password" placeholder="Password" type="password">
+                            <span class='help-block' *ngIf="showEnterMessage('password')">
+                                Please enter password
+                            </span>
+                            <span class='help-block' *ngIf="showNotValidMessage('password')">
+                                Please enter a valid password
+                            </span>
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="phone" [placeholder]="'Phone'" type="text">
+                            <span class='help-block' *ngIf="showEnterMessage('phone')">
+                                Please enter phone number
+                            </span>
+                            <span class='help-block' *ngIf="showNotValidMessage('phone')">
+                                Please enter a 10 digit phone number
+                            </span>
+
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="home_phone_number" placeholder="Home Phone" type="text">
+                            <span class='help-block' *ngIf="showNotValidMessage('home_phone_number')">
+                                Please enter a 10 digit home phone number
+                            </span>
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45" *ngIf="workPhoneRequired" >
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="work_phone_number" placeholder="Work Phone" type="text">
+                            <span class='help-block' *ngIf="showNotValidMessage('work_phone_number')">
+                                Please enter a 10 digit work phone number
+                            </span>
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45" *ngIf="!isFinance" >
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="card_number" placeholder="Card Number" type="text">
+                            <span class='help-block' *ngIf="showNotValidMessage('card_number')">
+                                Please enter 13 digit card number
+                            </span>
+                        </mat-form-field>
+                    </div>
+                    
+                    <div [fxFlex]="45" *ngIf="isDriver">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="plate_number" placeholder="Plate Number" type="text">
+                            <span class='help-block' *ngIf="showEnterMessage('plate_number')">
+                                Please enter plate number
+                            </span>
+                            <span class='help-block' *ngIf="showNotValidMessage('plate_number')">
+                                Please enter 11 digit plate number
+                            </span>
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45" *ngIf="isCorporate">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="price_deal" placeholder="Price Deal" type="text">
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45" *ngIf="isCorporate">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="address" placeholder="Address" type="text">
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45" *ngIf="isWorkHourRequired" formGroupName="working_hours">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="start" placeholder="Start Hour" type="time">
+                        </mat-form-field>
+                    </div>
+                    <div [fxFlex]="45" *ngIf="isWorkHourRequired" formGroupName="working_hours">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="end" placeholder="End Hour" type="time">
+                        </mat-form-field>
+                    </div>
+
+                    <div [fxFlex]="45" *ngIf="isCustomer">
+                        <mat-form-field fxFlexFill>
+                            <input matInput formControlName="attached_corporate" placeholder="Attached Corporate" type="text" [matAutocomplete]="autoGroup">
+                            <mat-autocomplete #autoGroup="matAutocomplete">
+                                <mat-optgroup *ngFor="let group of corporateGroupOptions | async" [label]="group.letter">
+                                    <mat-option *ngFor="let name of group.names" [value]="name">
+                                        {{name}}
+                                    </mat-option>
+                                </mat-optgroup>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+                </mat-card-content>
+
+                <mat-card-actions>
+                    <div fxFlex fxLayout="row" fxLayout.lt-md="column">
+                        <div [fxFlex]="45" fxLayoutAlign="start start">
+                            <button [disabled]="userForm.pristine || !userForm.valid" class="pimped-btn" mat-raised-button type="submit" color="primary">
+                                {{isShowingAddForm ? 'Add' : 'Update'}} {{managedUserLabel}}
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-actions>
+
+            </mat-card>
+        </form>
+
+        <mat-card>
+            <div *ngIf="isShowingAddForm" class="addmany">
+                <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+                    <div [fxFlex]="45" fxLayoutAlign="end center">
+                        <label class="choose-file-label">
+                            <input class="file-input" type="file" (change)="onFileInput($event)" color="primary" accept=".xlsx" />
+                            <span id="choose-btn">
+                                <mat-icon>attach_file</mat-icon> {{file_name}} </span>
+                        </label>
+                    </div>
+                    <div [fxFlex]="45" fxLayoutAlign="start center">
+                        <button class="pimped-btn" [disabled]="file_name === 'choose an excel file'" mat-raised-button (click)="onAddFromFile()"
+                            type="submit" color="primary">
+                            <mat-icon>cloud_upload</mat-icon> Upload
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+
+    </div>
+
+    <div [fxFlex]="30">
+
+        <mat-card class="card-profile" fxLayout="column" fxLayoutAlign="center center">
+
+            <mat-card-header>
+                <img mat-card-avatar class="img" [src]="avatarUrl" />
+                <mat-card-title>
+                    <h3 class="m-0">{{managedUserLabel}}</h3>
+                </mat-card-title>
+                <mat-card-subtitle>
+                    <p class="m-0">{{firstName}} {{lastName}}</p>
+                </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+
+                <div ng2FileDrop class="drop-zone" [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" [uploader]="uploader">
+                    {{'Drop image here'}}
+                    <label class="choose-file-label">
+                        <input id="file_input" class="file-input" type="file" ng2FileSelect [uploader]="uploader" />
+                        <br/>
+                        <div id="select-file">
+                            <mat-icon>attach_file</mat-icon>
+                            {{ currentImageName || 'Select File' }}
+                        </div>
+                    </label>
+                </div>
+
+            </mat-card-content>
+
+            <mat-card-actions>
+                <button mat-raised-button [disabled]=" currentImageName === '' " class="pimped-btn" (click)="cancelUploadImage()" color="accent">Cancel</button>
+            </mat-card-actions>
+
+        </mat-card>
+
+    </div>
+
+
+</div>

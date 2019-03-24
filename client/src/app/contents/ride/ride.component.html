@@ -1,0 +1,334 @@
+<h2 id="trip-form-title" mat-dialog-title> Trip Booking Form
+    <mat-chip-list class="trip-status-chip-list">
+        <mat-chip selected [style.backgroundColor]='LABEL_COLORS[originalTrip.trip_status]'>
+            {{tripStatusLabel}}
+        </mat-chip>
+    </mat-chip-list>
+    <mat-chip-list *ngIf="late" class="trip-status-chip-list">
+        <mat-chip selected color='accent'>
+            Late
+        </mat-chip>
+    </mat-chip-list>
+</h2>
+
+<form [formGroup]="tripForm">
+    <mat-dialog-content class="trip-form">
+        <div fxFlex fxLayout="row" [ngStyle]="{'margin-bottom':corporateToggled ? '0px' : '15px'}" fxLayout.lt-md="column" fxLayoutGap="20px">
+            <div [fxFlex]="50">
+                <mat-slide-toggle [checked]="corporateToggled" fxFlexFill (change)="checkCustomerType($event)">
+                    {{ corporateToggled ? 'Corporate Customer' : 'Regular Customer'}}
+                </mat-slide-toggle>
+            </div>
+            <div [fxFlex]="50">
+                <mat-form-field fxFlexFill *ngIf="corporateToggled" formGroupName="customer">
+                    <input matInput formControlName="attached_corporate" placeholder="Corporate Client" type="text" [matAutocomplete]="autoCorporate">
+                    <mat-autocomplete #autoCorporate="matAutocomplete" (optionSelected)="onCorporateChange($event.option.value)">
+                        <mat-optgroup *ngFor="let group of corporateGroupOptions | async" [label]="group.letter">
+                            <mat-option *ngFor="let corporate of group.corporates" [value]="corporate">
+                                {{corporate.name}}
+                            </mat-option>
+                        </mat-optgroup>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div formGroupName="customer">
+
+            <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+
+                
+                <div [fxFlex]="50">
+                    <mat-form-field fxFlexFill>
+                        <input matInput formControlName="name" placeholder="Customer Name" type="text" [matAutocomplete]="autoName">
+                        <mat-autocomplete #autoName="matAutocomplete" (optionSelected)="onNameChange($event.option.value, 'customer')">
+                            <mat-option *ngFor="let user of searchedNameCustomers" [value]="user">
+                                {{user.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span class='help-block' *ngIf="showEnterMessage('customer.name')">
+                            Please enter customer name
+                        </span>
+                    </mat-form-field>
+                </div>
+
+                <div [fxFlex]="50">
+                    <mat-form-field fxFlexFill>
+                        <input matInput formControlName="phone" placeholder="Customer Phone" type="text" [matAutocomplete]="autoPhone">
+                        <mat-autocomplete #autoPhone="matAutocomplete" (optionSelected)="onPhoneChange($event.option.value, 'customer')">
+                            <mat-option *ngFor="let user of searchedPhoneCustomers" [value]="user">
+                                {{user.phone}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span class='help-block' *ngIf="showEnterMessage('customer.phone')">
+                            Please enter phone number
+                        </span>
+                        <span class='help-block' *ngIf="showNotValidMessage('customer.phone')">
+                            Please enter 10 digit phone number
+                        </span>
+                    </mat-form-field>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div *ngIf="show_history_table">
+
+            <h4 class="table-header">Customer Trip History</h4>
+
+            <div fxFlex fxLayout="row" fxFlexFill>
+                <table mat-table [dataSource]="tripHistoryDataSource" class="mat-elevation-z8">
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="trip_status">
+                        <th mat-header-cell *matHeaderCellDef>Trip Status</th>
+                        <td mat-cell *matCellDef="let row"> {{row.trip_status}}</td>
+                    </ng-container>
+                    <!-- PickupLocation Column -->
+                    <ng-container matColumnDef="pickup">
+                        <th mat-header-cell *matHeaderCellDef> Pickup</th>
+                        <td mat-cell *matCellDef="let row"> {{row.starting_location.name}}</td>
+                    </ng-container>
+                    <!-- DestinationLocation Column -->
+                    <ng-container matColumnDef="destination">
+                        <th mat-header-cell *matHeaderCellDef> Destination</th>
+                        <td mat-cell *matCellDef="let row"> {{row.destination_location.name}}</td>
+                    </ng-container>
+                    <!-- Driver Column -->
+                    <ng-container matColumnDef="driver">
+                        <th mat-header-cell *matHeaderCellDef> Driver</th>
+                        <td mat-cell *matCellDef="let row"> {{row.driver.name}}</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="tripHistoryDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: tripHistoryDisplayedColumns;" (click)="handleHistorySelected(row)"></tr>
+                </table>
+
+            </div>
+        </div>
+
+        <div formGroupName="driver">
+
+            <div *ngIf="showDriverFields" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+
+                <div [fxFlex]="50">
+                    <mat-form-field fxFlexFill>
+                        <input matInput formControlName="name" placeholder="Driver Name" type="text" [matAutocomplete]="autoDriverName">
+                        <mat-autocomplete #autoDriverName="matAutocomplete" (optionSelected)="onNameChange($event.option.value, 'driver')">
+                            <mat-option *ngFor="let driver of searchedNameDrivers" [value]="driver">
+                                {{driver.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span class='help-block' *ngIf="isDriverRequired && showEnterMessage('driver.name')">
+                            Please enter driver name
+                        </span>
+                    </mat-form-field>
+                </div>
+                                
+                <div [fxFlex]="50">
+                    <mat-form-field fxFlexFill>
+                        <input matInput formControlName="phone" placeholder="Driver Phone" type="text" [matAutocomplete]="autoDriverPhone">
+                        <mat-autocomplete #autoDriverPhone="matAutocomplete" (optionSelected)="onPhoneChange($event.option.value, 'driver')">
+                            <mat-option *ngFor="let driver of searchedPhoneDrivers" [value]="driver">
+                                {{driver.phone}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span  class='help-block' *ngIf="isDriverRequired && showNotValidMessage('driver.phone')">
+                            Please enter a 10 digit phone number
+                        </span>
+                    </mat-form-field>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+
+            <div [fxFlex]="50">
+                <div formGroupName="starting_location">
+                    <mat-form-field fxFlexFill>
+                        <input matInput formControlName="name" placeholder="Pickup Location" type="text" (focus)="hideHistorySuggestion()" [matAutocomplete]="autoStartLocation">
+                        <mat-autocomplete #autoStartLocation="matAutocomplete" (optionSelected)="onLocationChange($event.option.value, 'start')">
+                            <mat-option *ngFor="let location of searchedLocations" [value]="location">
+                                {{location.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span class='help-block' *ngIf="showEnterMessage('starting_location')">
+                            Please enter starting location
+                        </span>
+                        <mat-radio-group formControlName="home_work" *ngIf="homeOrWorkAddressAvailable">
+                            <mat-radio-button color="primary" value="home">Home
+                            </mat-radio-button>
+                            <mat-radio-button color="primary" value="work">Work
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div [fxFlex]="50">
+                <div formGroupName="destination_location">
+                    <mat-form-field fxFlexFill>
+                        <input matInput formControlName="name" (focus)="hideHistorySuggestion()" placeholder="Destination Location" type="text" [matAutocomplete]="autoDestinationLocation">
+                        <mat-autocomplete #autoDestinationLocation="matAutocomplete" (optionSelected)="onLocationChange($event.option.value, 'destination')">
+                            <mat-option *ngFor="let location of searchedLocations" [value]="location">
+                                {{location.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span class='help-block' *ngIf="showEnterMessage('destination_location')">
+                            Please enter destination location
+                        </span>
+                        <mat-radio-group formControlName="home_work_dest" *ngIf="homeOrWorkAddressAvailable">>
+                            <mat-radio-button color="primary" value="home">Home
+                            </mat-radio-button>
+                            <mat-radio-button color="primary" value="work">Work
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="showPaymentFields" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+            <div [fxFlex]="23">
+                <mat-form-field fxFlexFill>
+                    <input matInput formControlName="price" placeholder="Price" type="text">
+                </mat-form-field>
+            </div>
+            <div [fxFlex]="23">
+                <mat-form-field fxFlexFill>
+                    <input matInput formControlName="km" placeholder="KiloMeter" type="text">
+                </mat-form-field>
+            </div>
+            <div [fxFlex]="23">
+                <!--suppress XmlInvalidId -->
+                <label for="credit_customer">Credit Customer </label>
+                <mat-checkbox [ngModelOptions]="{standalone: true}" [(ngModel)]="showCreditCustomerField" name="credit_customer">
+                </mat-checkbox>
+                <mat-form-field *ngIf="showCreditCustomerField" fxFlexFill formGroupName="customer">
+                    <input matInput formControlName="card_number" placeholder="Customer Card Number" type="text">
+                    <span class='help-block' *ngIf="showNotValidMessage('customer.card_number')">
+                        Please enter a valid card number
+                    </span>
+                </mat-form-field>
+            </div>
+            <div [fxFlex]="23">
+                <mat-form-field fxFlexFill>
+                    <input matInput [ngModelOptions]="{standalone: true}"
+                           [(ngModel)]="waitingTime" placeholder="Waiting Time" type="number">
+                    <span matSuffix> minutes</span>
+                </mat-form-field>
+            </div>
+        </div>
+        <div *ngIf="showPaymentFields" class="flex flex--row">
+            <div class="flex">
+                Driver Rating
+                <star-rating-control formControlName='driver_rating'></star-rating-control>
+            </div>
+            <div class="flex" style="margin-left: 40px">
+                Customer Rating
+                <star-rating-control formControlName='customer_rating'></star-rating-control>
+            </div>
+        </div>
+        <div *ngIf="isSupervisorManaging" fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+            <div [fxFlex]="50">
+                <mat-form-field fxFlexFill>
+                    <input matInput [matDatepicker]="dp" [placeholder]="timeStampLabel + ' Date'"
+                           [ngModelOptions]="{standalone: true}" [(ngModel)]="timeStampDate">
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div [fxFlex]="50">
+                <mat-form-field fxFlexFill>
+                    <input [(ngModel)]="timeStampTime" matInput [ngModelOptions]="{standalone: true}" [ngxTimepicker]="picker" [placeholder]="timeStampLabel + ' Time'">
+                    <ngx-material-timepicker #picker></ngx-material-timepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div *ngIf="showSchedulingToggle" fxFlex fxLayout="row" fxLayout.lt-md="column" [ngStyle]="{'margin-bottom':showSchedulingFields ? '0px' : '15px'}"
+            fxLayoutGap="20px">
+            <div [fxFlex]="15">
+                <mat-slide-toggle [checked]="showSchedulingFields" fxFlexFill (change)="toggleSchedule($event)">
+                    <span [ngStyle]="{'color':showSchedulingFields ? 'black' : 'gray'}">Schedule</span>
+                </mat-slide-toggle>
+            </div>
+            <div [fxFlex]="32" *ngIf="showSchedulingFields">
+                <mat-form-field fxFlexFill>
+                    <input matInput [matDatepicker]="dp" placeholder="Pick Date" formControlName="scheduled_date">
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div [fxFlex]="50" *ngIf="showSchedulingFields">
+                <mat-form-field fxFlexFill>
+                    <input id="scheduled-time" [(ngModel)]="scheduled_time" matInput [ngModelOptions]="{standalone: true}" [ngxTimepicker]="picker"
+                        placeholder="Pick Time">
+                    <ngx-material-timepicker #picker></ngx-material-timepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+
+        <div fxFlex fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+
+            <div fxFlex>
+                <div fxFlexFill *ngIf="!!originalTrip.received_by">
+                    #received By
+                    <mat-chip-list>
+                        <mat-chip>
+                            <img [src]='originalTrip.received_by.avatar_url' matChipAvatar alt="receiver avatar"> {{originalTrip.received_by.name}}
+                        </mat-chip>
+                    </mat-chip-list>
+                    <!-- <span [style.color]="COLORS['pending']">@{{originalTrip.received_by ? originalTrip.received_by.name : ''}}</span> -->
+                </div>
+            </div>
+
+            <div fxFlex>
+                <div fxFlexFill *ngIf="!!originalTrip.accepted_by">
+                    #accepted By
+                    <mat-chip-list>
+                        <mat-chip>
+                            <img [src]='originalTrip.accepted_by.avatar_url' matChipAvatar alt="acceptor avatar"> {{originalTrip.accepted_by.name}}
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+
+            <div fxFlex>
+                <div fxFlexFill *ngIf="!!originalTrip.started_by">
+                    #started By
+                    <!-- <span [style.color]="COLORS['started']">@{{originalTrip.started_by ? originalTrip.started_by.name : ''}}</span> -->
+                    <mat-chip-list>
+                        <mat-chip>
+                            <img [src]='originalTrip.started_by.avatar_url' matChipAvatar alt="starter avatar"> {{originalTrip.started_by.name}}
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+
+        <button class="mat-raised-button mat-warn" (click)="ignoreOrDelete()" [disabled]="disableIgnoreOrDelete()">{{ignoreOrDeleteLabel}}</button>
+
+        <button class="mat-raised-button mat-accent" (click)="hideTripModal()" [disabled]="disableSave()">Save</button>
+
+        <button class="mat-raised-button mat-primary" (click)="onSubmit()" type="submit" [disabled]="disableSubmit()">
+            {{submitLabel}}
+        </button>
+        <button class="mat-raised-button mat-primary" [disabled]='originalTrip.dispute || originalTrip.trip_status === "pre_pending"'
+            (click)="showDisputeForm()" type="submit">Report Dispute</button>
+
+    </mat-dialog-actions>
+
+</form>

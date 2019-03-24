@@ -1,0 +1,21 @@
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td,
+th {
+    width: 16.66%;
+}
+
+tr.data {
+    cursor: pointer;
+}
+
+tr.data:hover {
+    background-color: lightgray;
+}

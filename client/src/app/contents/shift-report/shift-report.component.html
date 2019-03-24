@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Shift Report</h2>
+<mat-dialog-content *ngIf="loaded" [formGroup]="shiftReportForm">
+    <mat-card>
+        <mat-form-field class="full-width">
+            <textarea matInput formControlName='remark' placeholder="Remark"></textarea>
+        </mat-form-field>
+        <div fxFlex fxLayout="row">
+            <mat-form-field [hidden]='true'>
+                <input type="text" placeholder="Received Trips" aria-label="Received Trips" matInput formControlName="accepted_trips" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let acceptedTrip of acceptedTrips" [value]="acceptedTrip">
+                        {{acceptedTrips.length}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-list>
+                <mat-list-item>
+                    <mat-icon mat-list-icon>call</mat-icon>
+                    <p mat-line>Accepted Trips</p>
+                    <h4 mat-line>{{ acceptedTrips.length }}</h4>
+                </mat-list-item>
+            </mat-list>
+            <mat-form-field [hidden]='true'>
+                <input type="text" placeholder="Bookings" aria-label="Bookings" matInput formControlName="bookings" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let acceptedTrip of acceptedTrips" [value]="acceptedTrip">
+                        {{acceptedTrips.length}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-list>
+                <mat-list-item>
+                    <mat-icon mat-list-icon>book</mat-icon>
+                    <p mat-line>Bookings</p>
+                    <h4 mat-line>{{ bookings.length }}</h4>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <!-- <div fxFlex fxLayout="row">
+            
+        </div> -->
+    </mat-card>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <mat-spinner diameter="25" *ngIf="loading"></mat-spinner>
+    <button mat-button color='primary' [disabled]='!shiftReportForm.valid' *ngIf="!loading" (click)="onSubmit()">Submit</button>
+    <button mat-button (click)="closeDialog()">Close</button>
+    <button mat-button (click)="ignoreAndLogout()" color='accent'>Logout</button>
+</mat-dialog-actions>

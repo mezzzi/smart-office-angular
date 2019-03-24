@@ -1,0 +1,66 @@
+<!--suppress ALL -->
+<mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+<mat-card>
+        <div [fxFlex]="100">
+                <mat-form-field fxFlexFill [formGroup]="userForm">
+                    <input matInput formControlName="attached_corporate" placeholder="Corporate Name" type="text" [matAutocomplete]="autoGroup">
+                    <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="onCorporateChange($event.option.value)">
+                        <mat-optgroup *ngFor="let group of corporateGroupOptions | async" [label]="group.letter">
+                            <mat-option *ngFor="let corporate of group.corporates" [value]="corporate">
+                                {{corporate.name}}
+                            </mat-option>
+                        </mat-optgroup>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+    <mat-card-header>
+        <mat-card-title>
+            <h3 class="m-0">Search {{'Trips'}}</h3>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <div fxFlex fxLayout="row" fxLayout.lt-md="column" class="collect-edit" fxLayoutGap="20px">
+        <div [hidden]="!showCollectOption()">
+            <button class="pimped-btn" (click)="doCollect()" mat-raised-button color="primary">Collect
+            </button>
+        </div>
+        <div [hidden]="!showEditOption()">
+            <button class="pimped-btn" (click)="editTrip()" mat-raised-button color="accent">Edit Trip
+            </button>
+        </div>
+    </div>
+    <mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource">
+            <ng-container *ngFor="let displayedCol of displayedColumns; let i = index" [matColumnDef]="displayedCol">
+                <th mat-header-cell *matHeaderCellDef>
+
+                    <mat-select class="select-header" [placeholder]="getPlaceHolder(i)"
+                                (selectionChange)="colChanged($event, i)">
+                        <mat-option *ngFor="let col of columnNames" [value]="col.value">
+                            {{col.name}}
+                        </mat-option>
+                    </mat-select>
+                    <!-- <mat-checkbox [disabled]="!loaded" *ngIf="i == 0" (change)="$event ? masterToggle() : null"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox> -->
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <span>{{getColValue(row, i)}}</span>
+                    <!-- <mat-checkbox *ngIf="i === 0" (click)="$event.stopPropagation()"
+                                  (change)="$event ? selection.toggle(row) : null"
+                                  [checked]="selection.isSelected(row)">
+                    </mat-checkbox> -->
+                </td>
+
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+</mat-card>

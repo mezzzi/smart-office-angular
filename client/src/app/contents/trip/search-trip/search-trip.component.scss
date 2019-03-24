@@ -1,0 +1,17 @@
+table {
+    width: 100%;
+}
+.full-width {
+    width: 100%;
+}
+.search-dialog {
+    width: 900px;
+}
+
+tr.data {
+    cursor: pointer;
+}
+
+tr.data:hover {
+    background-color: lightgray;
+}

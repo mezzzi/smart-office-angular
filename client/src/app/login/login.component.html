@@ -1,0 +1,58 @@
+<div class="login-page">
+    <div class="content">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+            <div class="text-center">
+                <h2 class="app-name">ETTA Local System</h2>
+            </div>
+            <div *ngIf="serverError && !loginForm.dirty">
+                <span class="help-block">Incorrect email or password. Please try again.</span>
+            </div>
+            <div fxFlex fxLayout="row" fxLayout.lt-md="column">
+                <div fxFlexFill>
+                    <mat-form-field class="w-100">
+                        <input name="email" matInput placeholder="Email" formControlName="email">
+                        <span class='help-block' *ngIf="!loginForm.get('email').value && loginForm.touched">
+                            Please enter an email
+                        </span>
+                        <span class='help-block' *ngIf="(loginForm.get('email').value !== '') && (!loginForm.get('email').valid) &&
+                        loginForm.get('email').dirty">
+                            Please enter a valid email
+                        </span>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxFlex fxLayout="row" fxLayout.lt-md="column">
+                <div fxFlexFill>
+                    <mat-form-field class="w-100">
+                        <input matInput name="password" type="password" placeholder="Password" formControlName="password">
+                        <span class='help-block' *ngIf="!loginForm.get('password').value && loginForm.touched">
+                            Please enter a password
+                        </span>
+                        <span class='help-block' *ngIf="(loginForm.get('password').value !== '') && (!loginForm.get('password').valid) && loginForm.get('password').dirty">
+                            Please enter at least 4 characters
+                        </span>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxFlex fxLayout="row" fxLayout.lt-md="column" style="margin: 20px 0 30px 0">
+                <div fxFlex>
+                    <mat-checkbox color="primary">Remember Me</mat-checkbox>
+                </div>
+                <div fxFlex fxLayoutAlign="end">
+                    <a href="javascript:void(0)">Forget Password?</a>
+                </div>
+            </div>
+            <div fxFlex fxLayout="row" fxLayout.lt-md="column">
+                <div fxFlexFill>
+                    <button mat-raised-button color="primary" [disabled]="!loginForm.valid || loading" class="w-100" type="submit">
+                        <span>
+                            <span *ngIf="!loading">Login</span>
+                            <mat-spinner diameter="25" color='accent' *ngIf="loading"></mat-spinner>
+                        </span>
+
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

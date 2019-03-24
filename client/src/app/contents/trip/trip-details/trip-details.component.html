@@ -1,0 +1,302 @@
+<h2 mat-dialog-title *ngIf="loaded">Trip Details
+    <mat-chip-list>
+        <mat-chip color='primary' selected *ngIf="__trip.collected">Collected</mat-chip>
+        <mat-chip color='accent' selected *ngIf="!__trip.collected">Not Collected</mat-chip>
+    </mat-chip-list>
+</h2>
+<mat-dialog-content class="trip-detail-dialog">
+    <mat-card *ngIf="loaded">
+        <mat-accordion>
+            <!-- location details -->
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>location_on</mat-icon> Location Details
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                    <mat-list>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>location_on</mat-icon>
+                            <p mat-line>Starting Location </p>
+                            <h4 mat-line>{{ trip.starting_location.name }}</h4>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>location_on</mat-icon>
+                            <p mat-line>Destination Location </p>
+                            <h4 mat-line>{{ trip.destination_location.name }}</h4>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </mat-expansion-panel>
+            <!-- customer details -->
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>person</mat-icon>Customer Details
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                    <mat-list>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>person</mat-icon>
+                            <p mat-line>Name </p>
+                            <h4 mat-line>{{ trip.customer.name }}</h4>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>call</mat-icon>
+                            <p mat-line>Phone </p>
+                            <h4 mat-line>{{ trip.customer.phone }}</h4>
+                        </mat-list-item>
+                    </mat-list>
+                    <!-- customer trip history -->
+                    <div class="mat-elevation-z8">
+                        <mat-card>
+                            <mat-form-field class="full-width">
+                                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                            </mat-form-field>
+                        </mat-card>
+                        <mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+                        <table mat-table [dataSource]="dataSource__customer" matSort>
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="driver_name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Driver Name</th>
+                                <td mat-cell *matCellDef="let trip"><span *ngIf="trip.driver"> {{trip.driver.name}} </span></td>
+                            </ng-container>
+                            <!-- Email Column -->
+                            <ng-container matColumnDef="customer_name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.customer.name}} </td>
+                            </ng-container>
+                            <!-- Email Column -->
+                            <ng-container matColumnDef="trip_status">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Trip Status </th>
+                                <td mat-cell *matCellDef="let trip" [style.color]="COLORS[trip.trip_status]">
+                                    {{trip.trip_status}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="starting_location">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Destination </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.starting_location.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="destination_location">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Destination </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.destination_location.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="call_time">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Call Time </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.call_time | date}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <!-- driver details -->
+            <mat-expansion-panel *ngIf="trip.driver">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>directions_car</mat-icon> Driver Details
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                    <div>
+                        <mat-list>
+                            <mat-list-item>
+                                <mat-icon mat-list-icon>person</mat-icon>
+                                <p mat-line>Name </p>
+                                <h4 mat-line>{{ trip.driver.name }}</h4>
+                            </mat-list-item>
+                            <mat-divider></mat-divider>
+                            <mat-list-item>
+                                <mat-icon mat-list-icon>call</mat-icon>
+                                <p mat-line>Phone </p>
+                                <h4 mat-line>{{ trip.driver.phone }}</h4>
+                            </mat-list-item>
+                        </mat-list>
+                        <!-- <h5>phone</h5>
+                                <span>{{trip.driver.phone}}</span> -->
+                    </div>
+                    <!-- customer trip history -->
+                    <h5>Driver History</h5>
+                    <div class="mat-elevation-z8">
+                        <mat-card>
+                            <mat-form-field class="full-width">
+                                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                            </mat-form-field>
+                        </mat-card>
+                        <mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+                        <table mat-table [dataSource]="dataSource__driver" matSort>
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="driver_name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Driver Name</th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.driver.name}} </td>
+                            </ng-container>
+                            <!-- Email Column -->
+                            <ng-container matColumnDef="customer_name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.customer.name}} </td>
+                            </ng-container>
+                            <!-- Email Column -->
+                            <ng-container matColumnDef="trip_status">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Trip Status </th>
+                                <td mat-cell *matCellDef="let trip" [style.color]="COLORS[trip.trip_status]">
+                                    {{trip.trip_status}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="starting_location">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Destination </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.starting_location.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="destination_location">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Destination </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.destination_location.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="call_time">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Call Time </th>
+                                <td mat-cell *matCellDef="let trip"> {{trip.call_time | date}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <!-- call time details -->
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>hourglass_empty</mat-icon> Time Details
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                    <mat-list>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>call</mat-icon>
+                            <p mat-line>Call Time </p>
+                            <h4 mat-line>{{ trip.call_time | date }}</h4>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>location_on</mat-icon>
+                            <p mat-line>Arrived Time </p>
+                            <h4 mat-line>{{ trip.time_arrived | date }}</h4>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item *ngIf="trip.waiting_time">
+                            <mat-icon mat-list-icon>location_on</mat-icon>
+                            <p mat-line>Wating Time </p>
+                            <h4 mat-line>{{ trip.waiting_time }}</h4>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </mat-expansion-panel>
+            <!-- financial details -->
+            <mat-expansion-panel *ngIf="trip.trip_status === 'arrived'">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>attach_money</mat-icon> Financial Details
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-card>
+                    <table mat-table [dataSource]="dataSource__transactions" class="mat-elevation-z8">
+                        <!-- km Column -->
+                        <ng-container matColumnDef="km">
+                            <th mat-header-cell *matHeaderCellDef> KM </th>
+                            <td mat-cell *matCellDef="let trip">
+                                <form class="example-form">
+                                    <mat-form-field class="example-full-width">
+                                        <span matPrefix></span>
+                                        <input name='km' [(ngModel)]="___trip.km" [disabled]='trip.collected' value="{{trip.km}}" type="number" matInput placeholder="">
+                                        <span matSuffix>km</span>
+                                    </mat-form-field>
+                                </form>
+                            </td>
+                            <td mat-footer-cell *matFooterCellDef> Total </td>
+                        </ng-container>
+                        <!-- price Column -->
+                        <ng-container matColumnDef="price">
+                            <th mat-header-cell *matHeaderCellDef> price </th>
+                            <td mat-cell *matCellDef="let trip">
+                                <form class="example-form">
+                                    <mat-form-field class="example-full-width">
+                                        <input name='price' [(ngModel)]="___trip.price" [disabled]='trip.collected' value="{{trip.price}}" type="number" matInput placeholder="">
+                                        <span matSuffix>ETB</span>
+                                    </mat-form-field>
+                                </form>
+                            </td>
+                            <td mat-footer-cell *matFooterCellDef>
+                                {{trip.total_price | currency}}
+                            </td>
+                        </ng-container>
+                        <!-- waiting time Column -->
+                        <ng-container matColumnDef="waiting_time">
+                            <th mat-header-cell *matHeaderCellDef> Waiting Time </th>
+                            <td mat-cell *matCellDef="let trip">
+                                <form class="example-form">
+                                    <mat-form-field class="example-full-width">
+                                        <input min="0"name='price' [(ngModel)]="___trip.waiting_time" [disabled]='trip.collected' value="{{trip.waiting_time}}" type="number" matInput placeholder="">
+                                        <span matSuffix>minutes</span>
+                                    </mat-form-field>
+                                </form>
+                            </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                        </ng-container>
+                        <!-- etta_fee Column -->
+                        <ng-container matColumnDef="etta_fee">
+                            <th mat-header-cell *matHeaderCellDef> ETTA fee </th>
+                            <td mat-cell *matCellDef="let trip"> {{getEttaFee() | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef>
+                                <!-- total trip price -->
+                            </td>
+                        </ng-container>
+                        <!-- start time Column -->
+                        <ng-container matColumnDef="started_time">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-icon>hourglass_full</mat-icon> Start Time </th>
+                            <td mat-cell *matCellDef="let trip"> {{trip.time_added | date}} </td>
+                            <td mat-footer-cell *matFooterCellDef>
+                                <!-- total trip price -->
+                            </td>
+                        </ng-container>
+                        <!-- arrived time Column -->
+                        <ng-container matColumnDef="arrived_time">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-icon>hourglass_full</mat-icon> Arrived Time </th>
+                            <td mat-cell *matCellDef="let trip"> {{trip.time_arrived| date}} </td>
+                            <td mat-footer-cell *matFooterCellDef>
+                                <button mat-button color="primary" (click)="onClickCollected()" [disabled]="trip.collected || submitting">
+                                    <mat-spinner diameter="25" *ngIf="submitting"></mat-spinner>
+                                    <mat-icon *ngIf="!submitting">check</mat-icon>
+                                    <span *ngIf="!submitting && !trip.collected"> Save</span>
+                                    <span *ngIf="!submitting && trip.collected"> Collected</span>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="transactionDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: transactionDisplayedColumns;"></tr>
+                        <tr mat-footer-row *matFooterRowDef="transactionDisplayedColumns"></tr>
+                    </table>
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+    </mat-card>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

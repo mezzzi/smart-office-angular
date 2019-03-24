@@ -1,0 +1,79 @@
+<mat-progress-bar *ngIf='!loaded' mode='indeterminate'></mat-progress-bar>
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            <h3 class="m-0">Search {{managed_user_label}}</h3>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <div fxFlex fxLayout="row" fxLayout.lt-md="column" class="delete-selections" fxLayoutGap="20px">
+        <div [hidden]="!showDeleteOption()">
+            <button class="pimped-btn" (click)="deleteSelection()" mat-raised-button color="warn">Delete Selection
+            </button>
+        </div>
+        <div [hidden]="!showEditOption()">
+            <button class="pimped-btn" (click)="editSelection()" mat-raised-button color="primary">Edit Selection
+            </button>
+        </div>
+    </div>
+    <div class="mat-elevation-z8">
+
+        <table position='sticky' mat-table [dataSource]="dataSource" matSort>
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="">
+                    <mat-checkbox [disabled]="loaded && !users" (change)="$event ? masterToggle() : null"
+                                  [checked]="selection.hasValue() && isAllSelected()"
+                                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                  [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
+                <td mat-cell *matCellDef="let row"> {{row.name}}</td>
+            </ng-container>
+
+            <!-- lastAudit Column -->
+            <ng-container matColumnDef="lastAudit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> lastAudit </th>
+                <td mat-cell *matCellDef="let row"> {{row.history}} </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email</th>
+                <td mat-cell *matCellDef="let row" [style.color]="row.email"> {{row.email}}</td>
+            </ng-container>
+
+            <!-- Phone Column -->
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone</th>
+                <td mat-cell *matCellDef="let row" [style.color]="row.phone"> {{row.phone}}</td>
+            </ng-container>
+
+            <!-- Account status Column -->
+            <ng-container matColumnDef="account_status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status</th>
+                <td mat-cell *matCellDef="let row" [style.color]="row.account_status"> {{row.account_status}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+
+        <mat-paginator [pageSize]="6" [pageSizeOptions]="[6, 10, 25, 100]"></mat-paginator>
+
+    </div>
+</mat-card>

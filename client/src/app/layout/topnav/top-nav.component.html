@@ -1,0 +1,76 @@
+<mat-toolbar id="header" color="primary" class="fix-nav mat-elevation-z6">
+
+    <button type="button" mat-icon-button class="visible-md" (click)="toggleSidebar()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+
+    <div class="nav-brand">
+        <span class="user-level" matTooltip="authUser.level" [routerLink]="['/dispatcher-dashboard']" aria-label="Label shows authenticated user's level">
+            {{ authUser.level[0] | uppercase }}</span>
+        {{ 'ETTA' | translate }}
+    </div>
+    <span class="nav-spacer"></span>
+    <div *ngIf="isDispatcherManaging || isSupervisorManaging || isDispatcherSupervisorManaging">
+        <button mat-button [routerLink]="['/dispatcher-dashboard']">
+            <mat-icon>trending_up</mat-icon>
+            Report
+        </button>
+        <button mat-button (click)="showManagePanel()">
+            <mat-icon>dashboard</mat-icon>
+            {{ managePanelLabel }}
+        </button>
+        <button mat-button (click)="showDispatcherPanel()">
+            <mat-icon>headset_mic</mat-icon>
+            Dispatcher Panel
+        </button>
+        <button mat-button (click)="showNotifications()">
+            <mat-icon matBadge="{{noOfNotifications}}">notifications</mat-icon> Bookings
+        </button>
+    </div>
+
+    <!-- profile -->
+    <div class="nav-holder">
+        <div>
+            <div>
+                <button mat-button [matMenuTriggerFor]="profile">
+                    <img class="top-nav-avatar" [src]="avatar" /> {{ authUser.name.split(' ')[0] }}
+                </button>
+                <mat-menu #profile="matMenu">
+                    <button mat-menu-item (click)="onLogOut()">
+                        <mat-icon>exit_to_app</mat-icon>
+                        Logout
+                    </button>
+                    <button *ngIf="showProfileMenu" mat-menu-item (click)="showProfile()">
+                        <mat-icon>account_circle</mat-icon>
+                        Profile
+                    </button>
+                    <button mat-menu-item [matMenuTriggerFor]="language">
+                        <mat-icon>translate</mat-icon>
+                        Translate
+                    </button>
+                    <button *ngIf="showExport" mat-menu-item (click)="onExportClick()">
+                        <mat-icon>cloud_download</mat-icon>
+                        export data
+                    </button>
+                    <mat-menu #language="matMenu">
+                        <button mat-menu-item (click)="changeLang('en')">
+                            <span>{{ 'English' | translate }}</span>
+                        </button>
+                        <button mat-menu-item (click)="changeLang('am')">
+                            <span>{{ 'Amharic' | translate }}</span>
+                        </button>
+                    </mat-menu>
+                </mat-menu>
+            </div>
+            <!-- settings -->
+            <!-- <div>
+                <button class="hidden-sm" mat-icon-button [matMenuTriggerFor]="settings">
+                    <mat-icon>more_vertical</mat-icon>
+                </button>
+                <mat-menu #settings="matMenu">
+                </mat-menu>
+            </div> -->
+        </div>
+    </div>
+
+</mat-toolbar>

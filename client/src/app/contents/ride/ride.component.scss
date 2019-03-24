@@ -1,0 +1,48 @@
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.trip-form {
+    width: 900px;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+td,
+th {
+    width: 25%;
+    color: darkgoldenrod !important;
+    font-weight: normal !important;
+}
+
+tr {
+    cursor: pointer;
+}
+// mat-chip img {
+//     width: 20px;
+//     height: 20px;
+// }
+
+tr:hover {
+    background-color: lightyellow;
+}
+
+.table-header {
+    color: darkgoldenrod !important;
+    font-weight: normal !important;
+}
+.trip-status-chip-list {
+    display: inline-block;
+}
+
+div.flex {
+    display: flex;
+}
+.flex.flex--row {
+    flex-direction: row;
+}
